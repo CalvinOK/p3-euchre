@@ -52,6 +52,8 @@ class Player {
   //print cards of the player
   virtual void print_cards() const = 0;
 
+  virtual bool get_human() const = 0;
+
   // Needed to avoid some compiler errors
   // NOTE: Do NOT write a destructor in the Player subclasses. The compiler-generated ones will work fine.
   virtual ~Player() {}
