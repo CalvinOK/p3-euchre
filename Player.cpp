@@ -145,6 +145,15 @@ public:
     return finalCard;
   }
 
+void print_cards() const override{
+  for (int i = 0; i < heldCards.size(); ++i){
+    cout << "Simple player " << get_name() << "'s hand: [" << i << "] "
+    << heldCards[i].get_rank() << " of " << heldCards[i].get_suit() << endl;
+  }
+  cout << "Simple player " <<get_name() << ", please enter a suit, or \"pass\":" << endl;;
+};
+
+
 private:
   string playerName;
   vector<Card> heldCards;
@@ -240,6 +249,20 @@ class Human: public Player{
     heldCards.erase(heldCards.begin() + stoi(decision));
     return finalCard;
   }
+
+  // Human player Judea's hand: [0] Nine of Spades
+  // Human player Judea's hand: [1] Ten of Spades
+  // Human player Judea's hand: [2] Jack of Spades
+  // Human player Judea's hand: [3] King of Hearts
+  // Human player Judea's hand: [4] Ace of Hearts
+  // Human player Judea, please enter a suit, or "pass":
+  void print_cards() const override{
+    for (int i = 0; i < heldCards.size(); ++i){
+      cout << "Simple player " << get_name() << "'s hand: [" << i << "] "
+      << heldCards[i].get_rank() << " of " << heldCards[i].get_suit() << endl;
+    }
+    cout << "Human player " <<get_name() << ", please enter a suit, or \"pass\":" << endl;
+  };
 
 private:
   string playerName;

@@ -35,6 +35,7 @@ public:
     void delete_players();
     void reset_partial();
     void update_score();
+    void print_hand(int i);
 };
 
 // ./euchre.exe pack.in noshuffle 1 Adi Simple Barbara Simple Chi-Chih Simple Dabbala Simple
@@ -42,6 +43,10 @@ public:
 void Game::reset_partial(){
     whoWon.clear();
     pack.reset();
+}
+
+void Game::print_hand(int i){
+    players[i]->print_cards();
 }
 
 void Game::update_score(){
@@ -125,26 +130,52 @@ bool Game::make_trump(int r){
 
 void Game::play_hand(int starter){
     //five rounds
+    //At the beginning of each hand, announce the hand, starting at zero, followed by the dealer and the upcard.
+    //Hand 0
+    // Ivan deals
+    // Jack of Diamonds turned up
     for (int i = 0; i < 5; ++i){
         Card lead;
         Card curComp;
         int curInd = starter;
         int endInd = starter;
+
+        print_hand((curInd)%4);
         lead = players[curInd]->lead_card(trump);
+        //Print out which hand
+        cout << "Hand " << i << endl;
+        //Print out who is dealing
+        cout << players[curInd]->get_name() << " deals" << endl;
+        //print out lead card
+        cout << lead.get_rank() << " of " << lead.get_suit() << " turned up" << endl;
+
+        //print player hand
+        print_hand((curInd+1)%4);
         curComp = players[(curInd+1)%4]->play_card(lead, trump);
         if (lead< curComp){
+            cout<< players[(curInd+1)%4]->get_name() << " orders up " << curComp.get_suit() << endl;
             lead = curComp;
             endInd = (curInd+1)%4;
+        } else{
+            cout<< players[(curInd+1)%4]->get_name() << " passes " << endl;
         }
+        print_hand((curInd+2)%4);
         curComp = players[(curInd+2)%4]->play_card(lead, trump);
         if (lead<curComp){
+            cout<< players[(curInd+2)%4]->get_name() << " orders up " << curComp.get_suit() << endl;
             lead = curComp;
             endInd = (curInd+2)%4;
+        }else {
+            cout<< players[(curInd+2)%4]->get_name() << " passes " << endl;
         }
+        print_hand((curInd+3)%4);
         curComp = players[(curInd+3)%4]->play_card(lead, trump);
         if (lead< curComp){
+            cout<< players[(curInd+3)%4]->get_name() << " orders up " << curComp.get_suit() << endl;
             lead = curComp;
             endInd = (curInd+3)%4;
+        }else {
+            cout<< players[(curInd+3)%4]->get_name() << " passes " << endl;
         }
         whoWon.push_back(endInd);
         curInd = endInd;
@@ -254,6 +285,12 @@ int main(int argc, char *argv[]) {
     if (shuffleBool == "shuffle"){
         sBool = true;
     }
+
+    //print out executable and all arguments on the first line
+    for (size_t t = 0; t < argc; t++){
+        cout<<argv[t]<<" ";
+    }
+    cout << endl;
 
     //play the game
     Game game(&fin, sBool, pointsIn, p1_Name, p1_Type, p2_Name, p2_Type, p3_Name,
