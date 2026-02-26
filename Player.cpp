@@ -135,8 +135,14 @@ public:
 
     //find all of the ones that follow the suit
     for (int loc = 0; loc < heldCards.size(); ++loc){
-      if (heldCards[loc].get_suit() == led_card.get_suit() || heldCards[loc].is_left_bower(trump)){
-        locations.push_back(loc);
+      if (heldCards[loc].get_suit() == led_card.get_suit()
+      || heldCards[loc].is_left_bower(trump)){
+        if((led_card.get_suit() != trump)
+        &&(heldCards[loc].is_left_bower(trump))){
+          continue;
+        }else {
+          locations.push_back(loc);
+        }
       }
     }
     //if no suits, play lowest
@@ -153,7 +159,8 @@ public:
     //if has suits, play highest
     finalloc = locations[0];
     for(int i = 1; i < locations.size() ; ++i){
-      if(Card_less(heldCards[finalloc], heldCards[locations[i]], led_card, trump)){
+      if(Card_less(heldCards[finalloc],
+        heldCards[locations[i]], led_card, trump)){
         finalloc = locations[i];
       }
     }
@@ -161,34 +168,6 @@ public:
     heldCards.erase(heldCards.begin() + finalloc);
     return finalCard;
   }
-
-  // bool get_human() const override{
-  //   return b_human;
-  // }
-
-  // void print_cards() const override{
-  //   for (int i = 0; i < heldCards.size(); ++i){
-  //     cout << "Simple player " << get_name() << "'s hand: [" << i << "] "
-  //     << heldCards[i] << endl;
-  //   }
-  //   cout << "Simple player " <<get_name() << ", please enter a suit, or \"pass\":" << endl;
-  // };
-
-  // void sort(vector<Card> &uocards, const Card &led_card, Suit trump) const override{
-  //     vector<Card> organized;
-  //     for (size_t j = 0; j<uocards.size(); j++){
-  //       int ind = 0;
-  //       for(size_t i = 0; i<uocards.size(); ++i){
-  //         if(Card_less(uocards[i], uocards[ind], led_card, trump)){
-  //           ind = i;
-  //         }
-  //       }
-  //       organized.push_back(uocards[ind]);
-  //       uocards.erase(uocards.begin() + ind);
-  //     }
-  //     uocards = organized;
-  // };
-
 
 private:
   string playerName;
@@ -228,9 +207,11 @@ class Human: public Player{
                           int round, Suit &order_up_suit) const override {
     for (int i = 0; i < heldCards.size(); ++i){
       cout << "Human player " << get_name() << "'s hand: [" << i << "] "
-      << heldCards[i].get_rank() << " of " << heldCards[i].get_suit() << endl;
+      << heldCards[i].get_rank()
+      << " of " << heldCards[i].get_suit() << endl;
     }
-    cout << "Human player " << playerName << ", please enter a suit, or \"pass\":\n";
+    cout << "Human player " << playerName
+    << ", please enter a suit, or \"pass\":\n";
     string decision;
     cin >> decision;
 
@@ -250,10 +231,11 @@ class Human: public Player{
     sort(heldCards.begin(), heldCards.end());
     for (int i = 0; i < heldCards.size(); ++i){
       cout << "Human player " << get_name() << "'s hand: [" << i << "] "
-      << heldCards[i].get_rank() << " of " << heldCards[i].get_suit() << endl;
+      << heldCards[i] << endl;
     }
     cout << "Discard upcard: [-1]\n";
-    cout << "Human player " << playerName << ", please select a card to discard:\n";
+    cout << "Human player " << playerName
+    << ", please select a card to discard:\n";
     string decision;
     cin >> decision;
     //remove specific card
@@ -272,7 +254,8 @@ class Human: public Player{
     sort(heldCards.begin(), heldCards.end());
     for (int i = 0; i < heldCards.size(); ++i){
       cout << "Human player " << get_name() << "'s hand: [" << i << "] "
-      << heldCards[i].get_rank() << " of " << heldCards[i].get_suit() << endl;
+      << heldCards[i].get_rank()
+      << " of " << heldCards[i].get_suit() << endl;
     }
     cout << "Human player " << playerName << ", please select a card:\n";
     string decision;
@@ -283,13 +266,15 @@ class Human: public Player{
   }
 
   //REQUIRES Player has at least one card
-  //EFFECTS  Plays one Card from Player's hand according to their strategy.
+  //EFFECTS  Plays one Card from
+  //Player's hand according to their strategy.
   //  The card is removed from the player's hand.
   virtual Card play_card(const Card &led_card, Suit trump) override {
     sort(heldCards.begin(), heldCards.end());
     for (int i = 0; i < heldCards.size(); ++i){
       cout << "Human player " << get_name() << "'s hand: [" << i << "] "
-      << heldCards[i].get_rank() << " of " << heldCards[i].get_suit() << endl;
+      << heldCards[i].get_rank()
+      << " of " << heldCards[i].get_suit() << endl;
     }
     cout << "Human player " << playerName << ", please select a card:\n";
     string decision;
@@ -311,8 +296,10 @@ class Human: public Player{
   // Human player Judea, please enter a suit, or "pass":
   // void print_cards() const override{
   //   for (int i = 0; i < heldCards.size(); ++i){
-  //     cout << "Human player " << get_name() << "'s hand: [" << i << "] "
-  //     << heldCards[i].get_rank() << " of " << heldCards[i].get_suit() << endl;
+  //     cout << "Human player " << get_name()
+  //<< "'s hand: [" << i << "] "
+  //     << heldCards[i].get_rank() << " of "
+  //<< heldCards[i].get_suit() << endl;
   //   }
   // };
 
@@ -322,7 +309,8 @@ private:
   // bool b_human = true;
 };
 
-Player * Player_factory(const std::string &name, const std::string &strategy) {
+Player * Player_factory(const std::string &name,
+  const std::string &strategy) {
   // We need to check the value of strategy and return 
   // the corresponding player type.
   if (strategy == "Simple") {

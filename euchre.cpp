@@ -25,12 +25,11 @@ private:
     int handCount;
     vector <int> whoWon;
 public:
-    Game(ifstream* cardIn, bool shuffleBool, int pointsNeeded, string p1Name,
-        string p1Type, string p2Name, string p2Type, string p3Name,
-        string p3Type, string p4Name, string p4Type);
+    Game(ifstream* cardIn, bool shuffleBool, int pointsNeeded,
+        vector<string> info);
     void play();
     void shuffle();
-    void deal();
+    void deal(int start);
     bool make_trump(int round);
     void play_hand(int starter);
     void delete_players();
@@ -38,7 +37,8 @@ public:
     void update_score();
 };
 
-// ./euchre.exe pack.in noshuffle 1 Adi Simple Barbara Simple Chi-Chih Simple Dabbala Simple
+// ./euchre.exe pack.in noshuffle 1 Adi Simple
+// Barbara Simple Chi-Chih Simple Dabbala Simple
 
 void Game::reset_partial(){
     whoWon.clear();
@@ -56,39 +56,52 @@ void Game::update_score(){
         }
     }
 
-    //first case "If the team that ordered up the trump suit takes 3 or 4 tricks, they get 1 point."
-    if ((whoOrderedUp == 0 || whoOrderedUp == 2)&&(t1_wins==3 || t1_wins ==4)){
+    //first case "If the team that ordered up the
+    //  trump suit takes 3 or 4 tricks, they get 1 point."
+    if ((whoOrderedUp == 0 || whoOrderedUp == 2)
+    &&(t1_wins==3 || t1_wins ==4)){
         t1_score++;
-        cout << players[0]->get_name() << " and " << players[2]->get_name() << " win the hand" <<endl;
-    } else if ((whoOrderedUp == 1 || whoOrderedUp == 3)&&(t2_wins==3 || t2_wins ==4)){
+        cout << players[0]->get_name() << " and "
+        << players[2]->get_name() << " win the hand" <<endl;
+    } else if ((whoOrderedUp == 1 || whoOrderedUp == 3)
+    &&(t2_wins==3 || t2_wins ==4)){
         t2_score++;
-        cout << players[1]->get_name() << " and " << players[3]->get_name() << " win the hand" <<endl;
+        cout << players[1]->get_name() << " and "
+        << players[3]->get_name() << " win the hand" <<endl;
     }
-    //second case "If the team that ordered up the trump suit takes all 5 tricks, they get 2 points. This is called a march."
+    //second case "If the team that ordered up thetrump suit
+    // takes all 5 tricks, they get 2 points. This is called a march."
     if ((whoOrderedUp == 0 || whoOrderedUp == 2)&&(t1_wins==5)){
         t1_score = t1_score+2;
-        cout << players[0]->get_name() << " and " << players[2]->get_name() << " win the hand" <<endl;
+        cout << players[0]->get_name() << " and "
+        << players[2]->get_name() << " win the hand" <<endl;
         //print march
         cout << "march!" << endl;
     } else if ((whoOrderedUp == 1 || whoOrderedUp == 3)&&(t2_wins==5)){
         t2_score = t2_score+2;
-        cout << players[1]->get_name() << " and " << players[3]->get_name() << " win the hand" <<endl;
+        cout << players[1]->get_name() << " and "
+        << players[3]->get_name() << " win the hand" <<endl;
         cout << "march!" << endl;
     }
-    //third case "If the team that did not order up takes 3, 4, or 5 tricks, they receive 2 points. This is called euchred."
+    //third case "If the team that did not order up takes
+    // 3, 4, or 5 tricks, they receive 2 points. This is called euchred."
     if (!(whoOrderedUp == 0 || whoOrderedUp == 2)&&(t1_wins>2)){
         t1_score = t1_score+2;
-        cout << players[0]->get_name() << " and " << players[2]->get_name() << " win the hand" <<endl;
+        cout << players[0]->get_name() << " and "
+        << players[2]->get_name() << " win the hand" <<endl;
         cout << "euchred!" << endl;
     } else if (!(whoOrderedUp == 1 || whoOrderedUp == 3)&&(t2_wins>2)){
         t2_score = t2_score+2;
-        cout << players[1]->get_name() << " and " << players[3]->get_name() << " win the hand" <<endl;
+        cout << players[1]->get_name() << " and "
+        << players[3]->get_name() << " win the hand" <<endl;
         cout << "euchred!" << endl;
     }
 
     //print out score
-    cout << players[0]->get_name() << " and " << players[2]->get_name() << " have " << t1_score << " points" <<endl;
-    cout << players[1]->get_name() << " and " << players[3]->get_name() << " have " << t2_score << " points" <<endl;  
+    cout << players[0]->get_name() << " and "
+    << players[2]->get_name() << " have " << t1_score << " points" <<endl;
+    cout << players[1]->get_name() << " and "
+    << players[3]->get_name() << " have " << t2_score << " points" <<endl;  
     cout << endl;
 }
 
@@ -102,18 +115,19 @@ void Game::add_player_cards(int c, Player* p){
     }
 }
 
-void Game::deal(){
+void Game::deal(int start){
+    
     //first round
-    add_player_cards(3, players[1]);
-    add_player_cards(2, players[2]);
-    add_player_cards(3, players[3]);
-    add_player_cards(2, players[0]);
+    add_player_cards(3, players[(start+1)%4]);
+    add_player_cards(2, players[(start+2)%4]);
+    add_player_cards(3, players[(start+3)%4]);
+    add_player_cards(2, players[(start+0)%4]);
 
     //second round
-    add_player_cards(2, players[1]);
-    add_player_cards(3, players[2]);
-    add_player_cards(2, players[3]);
-    add_player_cards(3, players[0]);
+    add_player_cards(2, players[(start+1)%4]);
+    add_player_cards(3, players[(start+2)%4]);
+    add_player_cards(2, players[(start+3)%4]);
+    add_player_cards(3, players[(start+0)%4]);
 }
 
 bool Game::make_trump(int r){
@@ -122,11 +136,19 @@ bool Game::make_trump(int r){
         if(players[i%4]->make_trump(upcard, (i%4) == dealerInd,
                             r, trump)){
             whoOrderedUp = i%4;
-            cout<< players[i%4]->get_name() << " orders up " << trump << endl;
+            cout<< players[i%4]->get_name()
+            << " orders up " << trump << endl;
+            // //if is second round then extra space
+            // if(r==2){
+            //     cout << endl;
+            // }
+            if(r == 1){
+                players[dealerInd%4]->add_and_discard(upcard);
+            }
             cout << endl;
             return true;
         } else{
-            cout<< players[i%4]->get_name() << " passes" << endl;
+            cout << players[i%4]->get_name() << " passes" << endl;
         }
     }
     return false;
@@ -134,19 +156,26 @@ bool Game::make_trump(int r){
 
 void Game::play_hand(int starter){
     //five rounds
-    int curInd = starter;
+    int curInd = starter+1;
     Card lead;
     for (int i = 0; i < 5; ++i){
         vector <Card> handCards;
         //lead cards for 1
-        handCards.push_back(players[curInd]->lead_card(trump));
+        handCards.push_back(players[curInd%4]->lead_card(trump));
         lead = handCards[0];
-        cout << handCards[0] << " led by " << players[(curInd)%4]->get_name() << endl;
+        if (lead.is_left_bower(trump)){
+            Card next (JACK, Suit_next(lead.get_suit()));
+            lead = next;
+        }
+        cout << handCards[0] << " led by "
+        << players[(curInd)%4]->get_name() << endl;
 
         //play cards for 2,3,4
         for (int j =1; j<4; j++){
-            handCards.push_back(players[(curInd+j)%4]->play_card(lead, trump));
-            cout << handCards[j] << " played by " << players[(curInd+j)%4]->get_name() << endl;
+            handCards.push_back(players[(curInd+j)%4]
+            ->play_card(lead, trump));
+            cout << handCards[j] << " played by "
+            << players[(curInd+j)%4]->get_name() << endl;
             // if (Card_less(lead, curComp, upcard, trump)){
             //     //play King of Spades played by Chi-Chih
             //     lead = curComp;
@@ -169,7 +198,8 @@ void Game::play_hand(int starter){
         curInd = (curInd+loopHold)%4;
 
         //printing who took the trick "Dabbala takes the trick"
-        cout << players[curInd]->get_name() << " takes the trick" << endl;
+        cout << players[curInd]->get_name()
+        << " takes the trick" << endl;
 
         cout << endl;
 
@@ -184,9 +214,8 @@ void Game::delete_players(){
     }
 }
 
-Game::Game(ifstream* cardIn, bool shuffleBool, int pointsNeeded, string p1Name,
-        string p1Type, string p2Name, string p2Type, string p3Name,
-        string p3Type, string p4Name, string p4Type) {
+Game::Game(ifstream* cardIn, bool shuffleBool,
+        int pointsNeeded, vector<string> info) {
     
     //inport pack
     Pack impack(*cardIn);
@@ -194,6 +223,15 @@ Game::Game(ifstream* cardIn, bool shuffleBool, int pointsNeeded, string p1Name,
 
     //add points needed to win
     pointsReq = pointsNeeded;
+
+    string p1Name = info[0];
+    string p1Type = info[1];
+    string p2Name = info[2];
+    string p2Type = info[3];
+    string p3Name = info[4];
+    string p3Type = info[5];
+    string p4Name = info[6];
+    string p4Type = info[7];
 
     handCount = 0;
     t1_score = 0;
@@ -219,10 +257,10 @@ void Game::play(){
     }
 
     //print out dealer
-    cout << players[dealerInd]->get_name() << " deals" << endl;
+    cout << players[dealerInd%4]->get_name() << " deals" << endl;
 
     //deals out the cards
-    deal();
+    deal(dealerInd);
 
     //pulls the upcard
     upcard = pack.deal_one();
@@ -235,21 +273,25 @@ void Game::play(){
         make_trump(2);
     }
 
-    play_hand(1);
+    play_hand(dealerInd);
 
     update_score();
 
     if(t1_score > pointsReq || t2_score > pointsReq){
         //print who won
         if (t1_score > pointsReq){
-            cout << players[0]->get_name() << " and " << players[2]->get_name() << " win!";
+            cout << players[0]->get_name()
+            << " and " << players[2]->get_name() << " win!";
         }else {
-            cout << players[1]->get_name() << " and " << players[3]->get_name() << " win!";
+            cout << players[1]->get_name()
+            << " and " << players[3]->get_name() << " win!";
         }
+        cout << endl;
         delete_players();
         return;
     }else {
         handCount ++;
+        dealerInd ++;
         //resets pack and vectors used
         reset_partial();
         play();
@@ -261,27 +303,32 @@ int main(int argc, char *argv[]) {
     string packIn = argv[1];
     string shuffleBool = argv[2];
     int pointsIn = stoi(argv[3]);
-    string p1_Name = argv[4];
-    string p1_Type = argv[5];
-    string p2_Name = argv[6];
-    string p2_Type = argv[7];
-    string p3_Name = argv[8];
-    string p3_Type = argv[9];
-    string p4_Name = argv[10];
-    string p4_Type = argv[11];
+    vector<string> info = {};
+    info.push_back(argv[4]);
+    info.push_back(argv[5]);
+    info.push_back(argv[6]);
+    info.push_back(argv[7]);
+    info.push_back(argv[8]);
+    info.push_back(argv[9]);
+    info.push_back(argv[10]);
+    info.push_back(argv[11]);
 
 // There are exactly 12 arguments, including the executable name.
 // Points to win the game is between 1 and 100, inclusive.
 // The shuffle argument is either shuffle or noshuffle.
 // The types of each of the players are either Simple or Human.
 
-//./euchre.exe pack.in noshuffle 1 Adi Simple Barbara Simple Chi-Chih Simple Dabbala Simple
+//./euchre.exe pack.in noshuffle 1 Adi
+// Simple Barbara Simple Chi-Chih Simple Dabbala Simple
 
     //check for errors
-    if(argc != 12 || pointsIn>100 || pointsIn<1 || (shuffleBool != "shuffle"
-            &&shuffleBool != "noshuffle") || (p1_Type != "Simple" && p1_Type != "Human")
-            || (p2_Type != "Simple" && p2_Type != "Human") || (p3_Type != "Simple" && p3_Type != "Human")
-            || (p4_Type != "Simple" && p4_Type != "Human")){
+    if(argc != 12 || pointsIn>100
+        || pointsIn<1 || (shuffleBool != "shuffle"
+            &&shuffleBool != "noshuffle")
+            || (info[1] != "Simple" && info[1] != "Human")
+            || (info[3] != "Simple" && info[3] != "Human")
+            || (info[5] != "Simple" && info[5] != "Human")
+            || (info[7] != "Simple" && info[7] != "Human")){
         cout << "Usage: euchre.exe PACK_FILENAME [shuffle|noshuffle] "
         << "POINTS_TO_WIN NAME1 TYPE1 NAME2 TYPE2 NAME3 TYPE3 "
         << "NAME4 TYPE4" << endl;
@@ -310,8 +357,7 @@ int main(int argc, char *argv[]) {
     cout << endl;
 
     //play the game
-    Game game(&fin, sBool, pointsIn, p1_Name, p1_Type, p2_Name, p2_Type, p3_Name,
-        p3_Type, p4_Name, p4_Type);
+    Game game(&fin, sBool, pointsIn, info);
     
     game.play();
 
