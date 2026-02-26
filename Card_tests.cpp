@@ -136,7 +136,8 @@ TEST(Card_less2){
 // //  Does not consider trump.
 // bool operator<(const Card &lhs, const Card &rhs);
 
-// //EFFECTS Returns true if lhs is lower value than rhs or the same card as rhs.
+// //EFFECTS Returns true if lhs is lower
+//value than rhs or the same card as rhs.
 // //  Does not consider trump.
 // bool operator<=(const Card &lhs, const Card &rhs);
 
@@ -144,7 +145,8 @@ TEST(Card_less2){
 // //  Does not consider trump.
 // bool operator>(const Card &lhs, const Card &rhs);
 
-// //EFFECTS Returns true if lhs is higher value than rhs or the same card as rhs.
+// //EFFECTS Returns true if lhs is higher 
+//value than rhs or the same card as rhs.
 // //  Does not consider trump.
 // bool operator>=(const Card &lhs, const Card &rhs);
 
@@ -159,13 +161,16 @@ TEST(Card_less2){
 // //EFFECTS returns the next suit, which is the suit of the same color
 // Suit Suit_next(Suit suit);
 
-// //EFFECTS Returns true if a is lower value than b.  Uses trump to determine
+// //EFFECTS Returns true if a is lower value than b. 
+//Uses trump to determine
 // // order, as described in the spec.
 // bool Card_less(const Card &a, const Card &b, Suit trump);
 
-// //EFFECTS Returns true if a is lower value than b.  Uses both the trump suit
+// //EFFECTS Returns true if a is lower value than b.
+//Uses both the trump suit
 // //  and the suit led to determine order, as described in the spec.
-// bool Card_less(const Card &a, const Card &b, const Card &led_card, Suit trump);
+// bool Card_less(const Card &a, const Card &b
+//const Card &led_card, Suit trump);
 
 // #endif // CARD_HPP
 
