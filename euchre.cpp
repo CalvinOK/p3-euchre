@@ -36,7 +36,6 @@ public:
     void delete_players();
     void reset_partial();
     void update_score();
-    void print_hand(int i);
 };
 
 // ./euchre.exe pack.in noshuffle 1 Adi Simple Barbara Simple Chi-Chih Simple Dabbala Simple
@@ -44,12 +43,6 @@ public:
 void Game::reset_partial(){
     whoWon.clear();
     pack.reset();
-}
-
-void Game::print_hand(int i){
-    if (players[i]->get_human()){
-        players[i]->print_cards();
-    }
 }
 
 void Game::update_score(){
@@ -141,37 +134,46 @@ bool Game::make_trump(int r){
 
 void Game::play_hand(int starter){
     //five rounds
-    int endInd = starter;
     int curInd = starter;
+    Card lead;
     for (int i = 0; i < 5; ++i){
-        Card lead;
-        Card curComp;
-
+        vector <Card> handCards;
         //lead cards for 1
-        //print lead player hand
-        print_hand((curInd)%4);
-        lead = players[(curInd)%4]->lead_card(trump);
-        cout << lead << " led by " << players[(curInd)%4]->get_name() << endl;
-        
+        handCards.push_back(players[curInd]->lead_card(trump));
+        lead = handCards[0];
+        cout << handCards[0] << " led by " << players[(curInd)%4]->get_name() << endl;
+
         //play cards for 2,3,4
         for (int j =1; j<4; j++){
-            //print player hand
-            print_hand((curInd+j)%4);
-            curComp = players[(curInd+j)%4]->play_card(lead, trump);
-            cout << curComp << " played by " << players[(curInd+j)%4]->get_name() << endl;
-            if (lead< curComp){
-                //play King of Spades played by Chi-Chih
-                lead = curComp;
-                endInd = (curInd+j)%4;
+            handCards.push_back(players[(curInd+j)%4]->play_card(lead, trump));
+            cout << handCards[j] << " played by " << players[(curInd+j)%4]->get_name() << endl;
+            // if (Card_less(lead, curComp, upcard, trump)){
+            //     //play King of Spades played by Chi-Chih
+            //     lead = curComp;
+            //     endInd = (curInd+j)%4;
+            // }
+        }
+
+        //analyze led and played cards in hand
+        Card a = handCards[0];
+        Card b;
+        int loopHold=0;
+        for(int i = 1; i < handCards.size() ; ++i){
+            b = handCards[i];
+            if (Card_less(a, b, lead, trump)){
+                a = b;
+                loopHold = i;
             }
         }
+
+        curInd = (curInd+loopHold)%4;
+
         //printing who took the trick "Dabbala takes the trick"
-        cout << players[endInd]->get_name() << " takes the trick" << endl;
+        cout << players[curInd]->get_name() << " takes the trick" << endl;
 
         cout << endl;
 
-        whoWon.push_back(endInd);
-        curInd = endInd;
+        whoWon.push_back(curInd);
     }
 }
 

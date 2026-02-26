@@ -152,9 +152,9 @@ public:
     }
     //if has suits, play highest
     finalloc = locations[0];
-    for(int i = 0; i < locations.size() ; ++i){
-      if(Card_less( heldCards[finalloc], heldCards[locations[i]], led_card, trump)){
-        finalloc = i;
+    for(int i = 1; i < locations.size() ; ++i){
+      if(Card_less(heldCards[finalloc], heldCards[locations[i]], led_card, trump)){
+        finalloc = locations[i];
       }
     }
     finalCard = heldCards[finalloc];
@@ -162,17 +162,17 @@ public:
     return finalCard;
   }
 
-  bool get_human() const override{
-    return b_human;
-  }
+  // bool get_human() const override{
+  //   return b_human;
+  // }
 
-  void print_cards() const override{
-    for (int i = 0; i < heldCards.size(); ++i){
-      cout << "Simple player " << get_name() << "'s hand: [" << i << "] "
-      << heldCards[i] << endl;
-    }
-    cout << "Simple player " <<get_name() << ", please enter a suit, or \"pass\":" << endl;
-  };
+  // void print_cards() const override{
+  //   for (int i = 0; i < heldCards.size(); ++i){
+  //     cout << "Simple player " << get_name() << "'s hand: [" << i << "] "
+  //     << heldCards[i] << endl;
+  //   }
+  //   cout << "Simple player " <<get_name() << ", please enter a suit, or \"pass\":" << endl;
+  // };
 
   // void sort(vector<Card> &uocards, const Card &led_card, Suit trump) const override{
   //     vector<Card> organized;
@@ -193,7 +193,7 @@ public:
 private:
   string playerName;
   vector<Card> heldCards;
-  bool b_human = false;
+  // bool b_human = false;
 };
 
 class Human: public Player{
@@ -226,7 +226,10 @@ class Human: public Player{
   //  not modify order_up_suit and return false.
   virtual bool make_trump(const Card &upcard, bool is_dealer,
                           int round, Suit &order_up_suit) const override {
-    print_cards();
+    for (int i = 0; i < heldCards.size(); ++i){
+      cout << "Human player " << get_name() << "'s hand: [" << i << "] "
+      << heldCards[i].get_rank() << " of " << heldCards[i].get_suit() << endl;
+    }
     cout << "Human player " << playerName << ", please enter a suit, or \"pass\":\n";
     string decision;
     cin >> decision;
@@ -245,7 +248,10 @@ class Human: public Player{
   //EFFECTS  Player adds one card to hand and removes one card from hand.
   virtual void add_and_discard(const Card &upcard) override {
     sort(heldCards.begin(), heldCards.end());
-    print_cards();
+    for (int i = 0; i < heldCards.size(); ++i){
+      cout << "Human player " << get_name() << "'s hand: [" << i << "] "
+      << heldCards[i].get_rank() << " of " << heldCards[i].get_suit() << endl;
+    }
     cout << "Discard upcard: [-1]\n";
     cout << "Human player " << playerName << ", please select a card to discard:\n";
     string decision;
@@ -264,7 +270,10 @@ class Human: public Player{
   //  is removed the player's hand.
   virtual Card lead_card(Suit trump) override {
     sort(heldCards.begin(), heldCards.end());
-    print_cards();
+    for (int i = 0; i < heldCards.size(); ++i){
+      cout << "Human player " << get_name() << "'s hand: [" << i << "] "
+      << heldCards[i].get_rank() << " of " << heldCards[i].get_suit() << endl;
+    }
     cout << "Human player " << playerName << ", please select a card:\n";
     string decision;
     cin >> decision;
@@ -278,7 +287,10 @@ class Human: public Player{
   //  The card is removed from the player's hand.
   virtual Card play_card(const Card &led_card, Suit trump) override {
     sort(heldCards.begin(), heldCards.end());
-    print_cards();
+    for (int i = 0; i < heldCards.size(); ++i){
+      cout << "Human player " << get_name() << "'s hand: [" << i << "] "
+      << heldCards[i].get_rank() << " of " << heldCards[i].get_suit() << endl;
+    }
     cout << "Human player " << playerName << ", please select a card:\n";
     string decision;
     cin >> decision;
@@ -287,9 +299,9 @@ class Human: public Player{
     return finalCard;
   }
 
-  bool get_human() const override{
-    return b_human;
-  }
+  // bool get_human() const override{
+  //   return b_human;
+  // }
 
   // Human player Judea's hand: [0] Nine of Spades
   // Human player Judea's hand: [1] Ten of Spades
@@ -297,17 +309,17 @@ class Human: public Player{
   // Human player Judea's hand: [3] King of Hearts
   // Human player Judea's hand: [4] Ace of Hearts
   // Human player Judea, please enter a suit, or "pass":
-  void print_cards() const override{
-    for (int i = 0; i < heldCards.size(); ++i){
-      cout << "Human player " << get_name() << "'s hand: [" << i << "] "
-      << heldCards[i].get_rank() << " of " << heldCards[i].get_suit() << endl;
-    }
-  };
+  // void print_cards() const override{
+  //   for (int i = 0; i < heldCards.size(); ++i){
+  //     cout << "Human player " << get_name() << "'s hand: [" << i << "] "
+  //     << heldCards[i].get_rank() << " of " << heldCards[i].get_suit() << endl;
+  //   }
+  // };
 
 private:
   string playerName;
   vector<Card> heldCards;
-  bool b_human = true;
+  // bool b_human = true;
 };
 
 Player * Player_factory(const std::string &name, const std::string &strategy) {

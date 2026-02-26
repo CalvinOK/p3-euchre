@@ -49,10 +49,10 @@ class Player {
   // Maximum number of cards in a player's hand
   static const int MAX_HAND_SIZE = 5;
 
-  //print cards of the player
-  virtual void print_cards() const = 0;
+  // //print cards of the player
+  // virtual void print_cards() const = 0;
 
-  virtual bool get_human() const = 0;
+  // virtual bool get_human() const = 0;
 
   // virtual void sort(vector<Card> &uo_cards, const Card &led_card, Suit trump) const = 0;
 
