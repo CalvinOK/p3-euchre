@@ -141,7 +141,7 @@ bool Card::is_face_or_ace() const{
 
 // //EFFECTS Returns true if card is the Jack of the trump suit
 bool Card::is_right_bower(Suit trump) const{
-  if (suit == trump && rank == 9){
+  if (suit == trump && rank == JACK){
     return true;
   }
   return false;
@@ -149,8 +149,8 @@ bool Card::is_right_bower(Suit trump) const{
 
 // //EFFECTS Returns true if card is the Jack of the next suit
 bool Card::is_left_bower(Suit trump) const{
-  int nextSuit = Suit_next(trump);
-  if (rank == 9 && nextSuit == trump){
+  Suit nextSuit = Suit_next(suit);
+  if (rank == JACK && nextSuit == trump){
     return true;
   }
   return false;
@@ -185,6 +185,8 @@ std::istream & operator>>(std::istream &is, Card &card){
 bool operator<(const Card &lhs, const Card &rhs){
   if(lhs.get_rank() < rhs.get_rank()){
     return true;
+  }else if (lhs.get_rank() == rhs.get_rank() && lhs.get_suit() < rhs.get_suit()){
+    return true;
   }
   return false;
 }
@@ -192,7 +194,9 @@ bool operator<(const Card &lhs, const Card &rhs){
 //EFFECTS Returns true if lhs is lower value than rhs or the same card as rhs.
 //  Does not consider trump.
 bool operator<=(const Card &lhs, const Card &rhs){
-  if(lhs.get_rank() <= rhs.get_rank()){
+  if(lhs.get_rank() < rhs.get_rank()){
+    return true;
+  }else if (lhs.get_rank() == rhs.get_rank() && lhs.get_suit() <= rhs.get_suit()){
     return true;
   }
   return false;
@@ -203,6 +207,8 @@ bool operator<=(const Card &lhs, const Card &rhs){
 bool operator>(const Card &lhs, const Card &rhs){
   if(lhs.get_rank() > rhs.get_rank()){
     return true;
+  }else if (lhs.get_rank() == rhs.get_rank() && lhs.get_suit() > rhs.get_suit()){
+    return true;
   }
   return false;
 }
@@ -210,7 +216,9 @@ bool operator>(const Card &lhs, const Card &rhs){
 //EFFECTS Returns true if lhs is higher value than rhs or the same card as rhs.
 //  Does not consider trump.
 bool operator>=(const Card &lhs, const Card &rhs){
-  if(lhs.get_rank() >= rhs.get_rank()){
+  if(lhs.get_rank() > rhs.get_rank()){
+    return true;
+  }else if (lhs.get_rank() == rhs.get_rank() && lhs.get_suit() >= rhs.get_suit()){
     return true;
   }
   return false;
@@ -247,13 +255,23 @@ Suit Suit_next(Suit suit){
 //EFFECTS Returns true if a is lower value than b.  Uses trump to determine
 // order, as described in the spec.
 bool Card_less(const Card &a, const Card &b, Suit trump){
+  //cases with bowlers
+  if (b.is_right_bower(trump)){
+    return true;
+  } if (a.is_right_bower(trump)){
+    return false;
+  } if (a.is_left_bower(trump)){
+    return false;
+  }  if (b.is_left_bower(trump)){
+    return true;
+  }
+
+  //general cases
   if (a.is_trump(trump) && !b.is_trump(trump)){
     return false;
   } else if (!a.is_trump(trump) && b.is_trump(trump)) {
     return true;
   } else if (a<b){
-    return true;
-  } else if (a==b && a.get_suit()<b.get_suit()){
     return true;
   } else{
     return false;
@@ -263,6 +281,17 @@ bool Card_less(const Card &a, const Card &b, Suit trump){
 //EFFECTS Returns true if a is lower value than b.  Uses both the trump suit
 //  and the suit led to determine order, as described in the spec.
 bool Card_less(const Card &a, const Card &b, const Card &led_card, Suit trump){
+  //cases with bowlers
+  if (b.is_right_bower(trump)){
+    return true;
+  } if (a.is_right_bower(trump)){
+    return false;
+  } if (a.is_left_bower(trump)){
+    return false;
+  }  if (b.is_left_bower(trump)){
+    return true;
+  }
+  
   if (a.is_trump(trump) && !b.is_trump(trump)){
     return false;
   } else if (!a.is_trump(trump) && b.is_trump(trump)) {
@@ -272,8 +301,6 @@ bool Card_less(const Card &a, const Card &b, const Card &led_card, Suit trump){
   } else if (!a.is_trump(led_card.get_suit()) && b.is_trump(led_card.get_suit())) {
     return true;
   } else if (a<b){
-    return true;
-  } else if (a==b && a.get_suit()<b.get_suit()){
     return true;
   } else{
     return false;

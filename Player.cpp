@@ -64,12 +64,12 @@ public:
     }
     //round two decision
     if (round == 2 && count2 >=1){
-      order_up_suit = upcard.get_suit();
+      order_up_suit = Suit_next(upcard.get_suit());
       return true;
     }
     //screw the dealer
     if (round == 2 && is_dealer){
-      order_up_suit = upcard.get_suit();
+      order_up_suit = Suit_next(upcard.get_suit());
       return true;
     }
     return false;
@@ -105,7 +105,7 @@ public:
     }
     //if not only trump cards
     finalCard = heldCards[notTrumps[notTrumps.size()-1]];
-    heldCards.erase(heldCards.end() - notTrumps[notTrumps.size()-1]);
+    heldCards.erase(heldCards.begin() + notTrumps[notTrumps.size()-1]);
     return finalCard;
   }
 

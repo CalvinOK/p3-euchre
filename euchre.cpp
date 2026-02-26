@@ -67,30 +67,37 @@ void Game::update_score(){
     //first case "If the team that ordered up the trump suit takes 3 or 4 tricks, they get 1 point."
     if ((whoOrderedUp == 0 || whoOrderedUp == 2)&&(t1_wins==3 || t1_wins ==4)){
         t1_score++;
+        cout << players[0]->get_name() << " and " << players[2]->get_name() << " win the hand" <<endl;
     } else if ((whoOrderedUp == 1 || whoOrderedUp == 3)&&(t2_wins==3 || t2_wins ==4)){
         t2_score++;
+        cout << players[1]->get_name() << " and " << players[3]->get_name() << " win the hand" <<endl;
     }
     //second case "If the team that ordered up the trump suit takes all 5 tricks, they get 2 points. This is called a march."
     if ((whoOrderedUp == 0 || whoOrderedUp == 2)&&(t1_wins==5)){
         t1_score = t1_score+2;
+        cout << players[0]->get_name() << " and " << players[2]->get_name() << " win the hand" <<endl;
         //print march
         cout << "march!" << endl;
     } else if ((whoOrderedUp == 1 || whoOrderedUp == 3)&&(t2_wins==5)){
         t2_score = t2_score+2;
+        cout << players[1]->get_name() << " and " << players[3]->get_name() << " win the hand" <<endl;
         cout << "march!" << endl;
     }
     //third case "If the team that did not order up takes 3, 4, or 5 tricks, they receive 2 points. This is called euchred."
     if (!(whoOrderedUp == 0 || whoOrderedUp == 2)&&(t1_wins>2)){
         t1_score = t1_score+2;
+        cout << players[0]->get_name() << " and " << players[2]->get_name() << " win the hand" <<endl;
         cout << "euchred!" << endl;
     } else if (!(whoOrderedUp == 1 || whoOrderedUp == 3)&&(t2_wins>2)){
         t2_score = t2_score+2;
+        cout << players[1]->get_name() << " and " << players[3]->get_name() << " win the hand" <<endl;
         cout << "euchred!" << endl;
     }
 
     //print out score
-    cout << players[0]->get_name() << " and " << players[2]->get_name() << "have " << t1_score << " points" <<endl;
-    cout << players[1]->get_name() << " and " << players[3]->get_name() << "have " << t2_score << " points" <<endl;  
+    cout << players[0]->get_name() << " and " << players[2]->get_name() << " have " << t1_score << " points" <<endl;
+    cout << players[1]->get_name() << " and " << players[3]->get_name() << " have " << t2_score << " points" <<endl;  
+    cout << endl;
 }
 
 void Game::shuffle(){
@@ -119,15 +126,15 @@ void Game::deal(){
 
 bool Game::make_trump(int r){
     //loop through each player to get their trump
-    for (int i = 0; i<4; ++i){
-        if(players[i]->make_trump(upcard, i == dealerInd,
+    for (int i = dealerInd+1; i<dealerInd+5; ++i){
+        if(players[i%4]->make_trump(upcard, (i%4) == dealerInd,
                             r, trump)){
-            whoOrderedUp = i;
-            cout<< players[i]->get_name() << " orders up " << trump << endl;
+            whoOrderedUp = i%4;
+            cout<< players[i%4]->get_name() << " orders up " << trump << endl;
             cout << endl;
             return true;
         } else{
-            cout<< players[i]->get_name() << " passes" << endl;
+            cout<< players[i%4]->get_name() << " passes" << endl;
         }
     }
     return false;
@@ -135,11 +142,11 @@ bool Game::make_trump(int r){
 
 void Game::play_hand(int starter){
     //five rounds
+    int endInd = starter;
+    int curInd = starter;
     for (int i = 0; i < 5; ++i){
         Card lead;
         Card curComp;
-        int curInd = starter;
-        int endInd = starter;
 
         //lead cards for 1
         //print lead player hand
@@ -181,7 +188,8 @@ Game::Game(ifstream* cardIn, bool shuffleBool, int pointsNeeded, string p1Name,
         string p3Type, string p4Name, string p4Type) {
     
     //inport pack
-    Pack pack(*cardIn);
+    Pack impack(*cardIn);
+    pack = impack;
 
     //add points needed to win
     pointsReq = pointsNeeded;
@@ -200,10 +208,7 @@ Game::Game(ifstream* cardIn, bool shuffleBool, int pointsNeeded, string p1Name,
     players.push_back(Player_factory(p4Name, p4Type));
 }
 
-void Game::play(){
-    //resets pack and vectors used
-    reset_partial();
-    
+void Game::play(){    
     //Print out which hand
     cout << "Hand " << handCount << endl;
 
@@ -244,6 +249,8 @@ void Game::play(){
         return;
     }else {
         handCount ++;
+        //resets pack and vectors used
+        reset_partial();
         play();
     }
     return;

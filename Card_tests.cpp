@@ -4,6 +4,11 @@
 
 using namespace std;
 
+TEST(str1){
+    Card c (JACK, DIAMONDS);
+    ASSERT_EQUAL(JACK, c.get_rank());
+    ASSERT_EQUAL(DIAMONDS, c.get_suit());
+}
 
 TEST(test_card_ctor) {
     Card c(ACE, HEARTS);
@@ -17,6 +22,11 @@ TEST(test_card_ctor2) {
     ASSERT_EQUAL(HEARTS, c.get_suit());
 }
 
+TEST(getSuitLB){
+    Card c(JACK, DIAMONDS);
+    ASSERT_EQUAL(HEARTS, c.get_suit(HEARTS));
+}
+
 TEST(Rbowler_suitTest) {
     Card c(JACK, HEARTS);
     ASSERT_EQUAL(true, c.is_right_bower(HEARTS));
@@ -27,15 +37,14 @@ TEST(Rbowler_suitTest2) {
     ASSERT_EQUAL(false, c.is_right_bower(HEARTS));
 }
 
-
-// TEST(Lbowler_suitTest) {
-//     Card c(JACK, DIAMONDS);
-//     ASSERT_EQUAL(true, c.is_left_bower(HEARTS));
-// }
-
-TEST(Lbowler_suitTest2) {
+TEST(Lbowler_suitTest) {
     Card c(TWO, DIAMONDS);
     ASSERT_EQUAL(false, c.is_left_bower(HEARTS));
+}
+
+TEST(Lbowler_suitTest2) {
+    Card c(JACK, DIAMONDS);
+    ASSERT_EQUAL(true, c.is_left_bower(HEARTS));
 }
 
 TEST(Face1){
@@ -56,13 +65,62 @@ TEST(Trump1){
 TEST(Greater){
     Card c(THREE, DIAMONDS);
     Card d(FOUR, HEARTS);
-    ASSERT_EQUAL(true, c<d);  
+    ASSERT_EQUAL(true, c<d);
+    ASSERT_FALSE(c>d);  
 }
-// TEST(Greater2){
-//     Card c(THREE, SPADES);
-//     Card d(THREE, HEARTS);
-//     ASSERT_EQUAL(true, c<d);  
-// }
+
+TEST(Greater1){
+    Card d(ACE, DIAMONDS);
+    Card h(ACE, HEARTS);
+    ASSERT_EQUAL(true, d>h);
+    ASSERT_FALSE(d<h);
+}
+
+TEST(Equal){
+    Card a(ACE, HEARTS);
+    Card b(ACE, HEARTS);
+    Card c(NINE, DIAMONDS);
+    ASSERT_TRUE(a<=b);
+    ASSERT_TRUE(a>=b);
+    ASSERT_TRUE(c<=b);
+    ASSERT_TRUE(a>=c);
+    ASSERT_TRUE(a==b);
+    ASSERT_TRUE(a!=c);
+}
+
+TEST(Suit_next1){
+    ASSERT_EQUAL(DIAMONDS, Suit_next(HEARTS));
+    ASSERT_EQUAL(HEARTS, Suit_next(DIAMONDS));
+}
+
+TEST(Suit_next2){
+    ASSERT_EQUAL(CLUBS, Suit_next(SPADES));
+    ASSERT_EQUAL(SPADES, Suit_next(CLUBS));
+}
+
+TEST(Card_less1){
+    Card a(ACE, HEARTS);
+    Card b(ACE, DIAMONDS);
+    Card c(JACK, DIAMONDS);
+    Card d(JACK, HEARTS);
+    ASSERT_FALSE(Card_less(a,b, HEARTS));
+    ASSERT_TRUE(Card_less(a,c,HEARTS));
+    ASSERT_TRUE(Card_less(c,d,HEARTS));
+}
+
+TEST(Card_less2){
+    Card led(EIGHT, DIAMONDS);
+    Card a(NINE, HEARTS);
+    Card b(TEN, DIAMONDS);
+    Card e(ACE, CLUBS);
+    Card c(JACK, DIAMONDS);
+    Card d(JACK, HEARTS);
+    ASSERT_TRUE(Card_less(b,a, led, HEARTS));
+    ASSERT_TRUE(Card_less(e,a, led, HEARTS));
+    ASSERT_TRUE(Card_less(e,b, led, HEARTS));
+    ASSERT_TRUE(Card_less(a,c, led, HEARTS));
+    ASSERT_TRUE(Card_less(c,d, led, HEARTS));
+}
 
 // //EFFECTS Returns true if lhs is lower value than rhs.
 // //  Does not consider trump.
