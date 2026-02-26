@@ -3,7 +3,6 @@
 #include <array>
 #include "Pack.hpp"
 #include "Player.hpp"
-#include "Card.hpp"
 #include <fstream>
 #include <string>
 #include <vector>

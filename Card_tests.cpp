@@ -52,6 +52,16 @@ TEST(Face1){
     ASSERT_EQUAL(true, c.is_face_or_ace());  
 }
 
+TEST(Face3){
+    Card c(ACE, DIAMONDS);
+    ASSERT_EQUAL(true, c.is_face_or_ace());  
+}
+
+TEST(Face4){
+    Card c(TEN, DIAMONDS);
+    ASSERT_EQUAL(false, c.is_face_or_ace());  
+}
+
 TEST(Face2){
     Card c(THREE, DIAMONDS);
     ASSERT_EQUAL(false, c.is_face_or_ace());  

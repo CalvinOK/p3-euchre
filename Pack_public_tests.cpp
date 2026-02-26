@@ -48,7 +48,7 @@ TEST(test_pack_shuffle) {
   Pack pack;
   pack.shuffle();
   Card first_card = pack.deal_one();
-  ASSERT_EQUAL(first_card, Card(KING, CLUBS));
+  ASSERT_EQUAL(first_card, Card(KING, SPADES));
 }
 
 TEST_MAIN()

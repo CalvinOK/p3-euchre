@@ -60,7 +60,7 @@ void Pack::reset(){
 void Pack::shuffle(){
     std::array <Card, PACK_SIZE/2> first;
     std::array <Card, PACK_SIZE/2> second;
-    for(int j=0; j<=6; ++j){
+    for(int j=0; j<7; ++j){
         for (int i = 0; i < cards.size()/2; i++){
             first.at(i) = cards.at(i);
         }
@@ -72,7 +72,12 @@ void Pack::shuffle(){
             cards.at(2*f+1) = first.at(f);
         }
     }
+    reset();
 }
+
+// void Pack::sort(const Card &led_card, Suit trump){
+
+// }
 
 // EFFECTS: returns true if there are no more cards left in the pack
 bool Pack::empty() const{

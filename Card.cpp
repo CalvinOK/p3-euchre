@@ -227,7 +227,7 @@ bool operator>=(const Card &lhs, const Card &rhs){
 //EFFECTS Returns true if lhs is same card as rhs.
 //  Does not consider trump.
 bool operator==(const Card &lhs, const Card &rhs){
-  if(lhs.get_rank() == rhs.get_rank()){
+  if(lhs.get_rank() == rhs.get_rank() && lhs.get_suit() == rhs.get_suit()){
     return true;
   }
   return false;

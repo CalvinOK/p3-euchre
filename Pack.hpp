@@ -43,6 +43,8 @@ public:
   //          https://en.wikipedia.org/wiki/In_shuffle.
   void shuffle();
 
+  // void sort(const Card &led_card, Suit trump);
+
   // EFFECTS: returns true if there are no more cards left in the pack
   bool empty() const;
 

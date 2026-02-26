@@ -1,7 +1,6 @@
 #include <cassert>
 #include <iostream>
 #include <array>
-#include "Pack.hpp"
 #include "Card.hpp"
 #include "Player.hpp"
 #include <string>
@@ -79,8 +78,14 @@ public:
   //EFFECTS  Player adds one card to hand and removes one card from hand.
   virtual void add_and_discard(const Card &upcard) override {
     heldCards.push_back(upcard);
-    sort(heldCards.begin(),heldCards.end());
-    heldCards.erase(heldCards.begin());
+    //find the lowest card
+    int ind = 0;
+    for (int i = 1; i < heldCards.size() ; ++i){
+      if(Card_less(heldCards[i], heldCards[ind], upcard.get_suit())){
+        ind = i;
+      }
+    }
+    heldCards.erase(heldCards.begin()+ind);
   };
 
   //REQUIRES Player has at least one card
@@ -90,7 +95,7 @@ public:
   virtual Card lead_card(Suit trump) override {
     vector <int> notTrumps;
     Card finalCard;
-    sort(heldCards.begin(),heldCards.end());
+    int ind = 0;
     //find locations of not trump card
     for (size_t i = 0; i <heldCards.size(); ++i){
       if(!heldCards[i].is_trump(trump)){
@@ -99,13 +104,24 @@ public:
     }
     //if only trump cards
     if(notTrumps.size() == 0){
-      finalCard = heldCards[heldCards.size()-1];
-      heldCards.erase(heldCards.end()-1);
+      for(int i = 1; i<heldCards.size(); ++i){
+        if(Card_less(heldCards[ind], heldCards[i], trump)){
+          ind = i;
+        }
+      }
+      finalCard = heldCards[ind];
+      heldCards.erase(heldCards.begin()+ind);
       return finalCard;
     }
     //if not only trump cards
-    finalCard = heldCards[notTrumps[notTrumps.size()-1]];
-    heldCards.erase(heldCards.begin() + notTrumps[notTrumps.size()-1]);
+    ind = notTrumps[0];
+    for (int i = 1; i<notTrumps.size(); ++i){
+      if (Card_less(heldCards[ind], heldCards[notTrumps[i]], trump)){
+        ind = notTrumps[i];
+      }
+    }
+    finalCard = heldCards[ind];
+    heldCards.erase(heldCards.begin() + ind);
     return finalCard;
   }
 
@@ -114,29 +130,39 @@ public:
   //  The card is removed from the player's hand.
   virtual Card play_card(const Card &led_card, Suit trump) override {
     vector<int> locations;
-    sort(heldCards.begin(),heldCards.end());
-    int finalloc = 0;
     Card finalCard = heldCards[0];
+    int finalloc = 0;
+
     //find all of the ones that follow the suit
     for (int loc = 0; loc < heldCards.size(); ++loc){
-      if (heldCards[loc].get_suit() == led_card.get_suit()){
+      if (heldCards[loc].get_suit() == led_card.get_suit() || heldCards[loc].is_left_bower(trump)){
         locations.push_back(loc);
       }
     }
     //if no suits, play lowest
     if(locations.size()== 0){
-      finalCard = heldCards[0];
-      heldCards.erase(heldCards.begin());
+      for (int i =1; i<heldCards.size(); ++i){
+          if(Card_less(heldCards[i], heldCards[finalloc], led_card, trump)){
+            finalloc = i;
+          }
+      }
+      finalCard = heldCards[finalloc];
+      heldCards.erase(heldCards.begin()+finalloc);
       return finalCard;
     }
     //if has suits, play highest
-    finalloc = locations[locations.size()-1];
+    finalloc = locations[0];
+    for(int i = 0; i < locations.size() ; ++i){
+      if(Card_less( heldCards[finalloc], heldCards[locations[i]], led_card, trump)){
+        finalloc = i;
+      }
+    }
     finalCard = heldCards[finalloc];
     heldCards.erase(heldCards.begin() + finalloc);
     return finalCard;
   }
 
-  virtual bool get_human() const override{
+  bool get_human() const override{
     return b_human;
   }
 
@@ -146,7 +172,22 @@ public:
       << heldCards[i] << endl;
     }
     cout << "Simple player " <<get_name() << ", please enter a suit, or \"pass\":" << endl;
-};
+  };
+
+  // void sort(vector<Card> &uocards, const Card &led_card, Suit trump) const override{
+  //     vector<Card> organized;
+  //     for (size_t j = 0; j<uocards.size(); j++){
+  //       int ind = 0;
+  //       for(size_t i = 0; i<uocards.size(); ++i){
+  //         if(Card_less(uocards[i], uocards[ind], led_card, trump)){
+  //           ind = i;
+  //         }
+  //       }
+  //       organized.push_back(uocards[ind]);
+  //       uocards.erase(uocards.begin() + ind);
+  //     }
+  //     uocards = organized;
+  // };
 
 
 private:
@@ -246,7 +287,7 @@ class Human: public Player{
     return finalCard;
   }
 
-  virtual bool get_human() const override{
+  bool get_human() const override{
     return b_human;
   }
 

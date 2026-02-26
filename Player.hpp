@@ -54,6 +54,8 @@ class Player {
 
   virtual bool get_human() const = 0;
 
+  // virtual void sort(vector<Card> &uo_cards, const Card &led_card, Suit trump) const = 0;
+
   // Needed to avoid some compiler errors
   // NOTE: Do NOT write a destructor in the Player subclasses. The compiler-generated ones will work fine.
   virtual ~Player() {}
