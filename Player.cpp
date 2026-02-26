@@ -135,14 +135,8 @@ public:
 
     //find all of the ones that follow the suit
     for (int loc = 0; loc < heldCards.size(); ++loc){
-      if (heldCards[loc].get_suit() == led_card.get_suit()
-      || heldCards[loc].is_left_bower(trump)){
-        if((led_card.get_suit() != trump)
-        &&(heldCards[loc].is_left_bower(trump))){
-          continue;
-        }else {
-          locations.push_back(loc);
-        }
+      if (heldCards[loc].get_suit(trump) == led_card.get_suit(trump)){
+        locations.push_back(loc);
       }
     }
     //if no suits, play lowest

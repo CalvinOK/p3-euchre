@@ -291,19 +291,16 @@ TEST(test_add_discard2){
     delete alice;
 }
 
-TEST(test_add_discard3){
+TEST(play_bowler_1){
     Player * alice = Player_factory("Alice", "Simple");
     ASSERT_EQUAL("Alice", alice->get_name());
-    Card a (NINE, SPADES);
-    Card b (JACK, HEARTS);
-    Card c (QUEEN, SPADES);
-    Card d (TEN, HEARTS);
+    Card a (NINE, CLUBS);
+    Card b (KING, CLUBS);
+    Card c (JACK, CLUBS);
     alice->add_card(a);
     alice->add_card(b);
-    alice->add_card(c);
-    alice->add_card(d);
 
-    ASSERT_EQUAL(alice->play_card(a, SPADES), c);
+    ASSERT_EQUAL(alice->play_card(c, SPADES), a);
 
     delete alice;
 }

@@ -9,8 +9,10 @@
             "name": "(lldb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/euchre.exe",
-            "args": ["pack.in", "shuffle", "10", "Edsger", "Simple", "Fran", "Simple", "Gabriel", "Simple", "Herb", "Simple"], //"pack.in", "noshuffle", "1", "Adi", "Simple", "Barbara", "Simple", "Chi-Chih", "Simple", "Dabbala", "Simple"
+            "program": "${workspaceFolder}/Player_tests.exe",
+            "args": [],
+            //"pack.in", "shuffle", "10", "Edsger", "Simple", "Fran", "Simple", "Gabriel", "Simple", "Herb", "Simple"
+            // //"pack.in", "noshuffle", "1", "Adi", "Simple", "Barbara", "Simple", "Chi-Chih", "Simple", "Dabbala", "Simple"
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],
