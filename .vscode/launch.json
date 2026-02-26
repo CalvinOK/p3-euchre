@@ -9,7 +9,7 @@
             "name": "(lldb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/Pack_tests.exe",
+            "program": "${workspaceFolder}/euchre.exe",
             "args": [], //"pack.in", "noshuffle", "1", "Adi", "Simple", "Barbara", "Simple", "Chi-Chih", "Simple", "Dabbala", "Simple"
             "stopAtEntry": false,
             "cwd": "${fileDirname}",

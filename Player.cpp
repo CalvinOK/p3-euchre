@@ -114,6 +114,7 @@ public:
   //  The card is removed from the player's hand.
   virtual Card play_card(const Card &led_card, Suit trump) override {
     vector<int> locations;
+    sort(heldCards.begin(),heldCards.end());
     int finalloc = 0;
     Card finalCard = heldCards[0];
     //find all of the ones that follow the suit
@@ -124,22 +125,12 @@ public:
     }
     //if no suits, play lowest
     if(locations.size()== 0){
-      for (int loc = 0; loc < heldCards.size(); ++loc){
-        if (heldCards[finalloc] > heldCards[loc]){
-          finalloc = loc;
-        }
-      }
-      finalCard = heldCards[finalloc];
-      heldCards.erase(heldCards.begin() + finalloc);
+      finalCard = heldCards[0];
+      heldCards.erase(heldCards.begin());
       return finalCard;
     }
     //if has suits, play highest
-    for (int loc = 0; loc < heldCards.size(); ++loc){
-      finalloc = locations[0];
-      if (heldCards[finalloc] < heldCards[loc]){
-        finalloc = loc;
-      }
-    }
+    finalloc = locations[locations.size()-1];
     finalCard = heldCards[finalloc];
     heldCards.erase(heldCards.begin() + finalloc);
     return finalCard;
@@ -152,7 +143,7 @@ public:
   void print_cards() const override{
     for (int i = 0; i < heldCards.size(); ++i){
       cout << "Simple player " << get_name() << "'s hand: [" << i << "] "
-      << heldCards[i].get_rank() << " of " << heldCards[i].get_suit() << endl;
+      << heldCards[i] << endl;
     }
     cout << "Simple player " <<get_name() << ", please enter a suit, or \"pass\":" << endl;
 };
